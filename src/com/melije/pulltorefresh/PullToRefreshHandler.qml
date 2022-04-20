@@ -46,18 +46,8 @@ Item
             return (control.indicatorDragDirection === PullToRefreshHandler.TOPTOBOTTOM) ?
                         (control.target.verticalOvershoot * -100) / m_threshold : (control.target.verticalOvershoot * 100) / m_threshold;
         }
-    }
 
-    signal pullDown()
-    signal pullUp()
-    signal pullDownRelease()
-    signal pullUpRelease()
-
-    Connections
-    {
-        target: control.target
-        enabled: control.enabled
-        onVerticalOvershootChanged:
+        function onVerticalOvershootChanged()
         {
             if (!control.target.verticalOvershoot)
             {
@@ -94,6 +84,27 @@ Item
                     control.pullUp();
                 }
             }
+        }
+    }
+
+    signal pullDown()
+    signal pullUp()
+    signal pullDownRelease()
+    signal pullUpRelease()
+
+    Component.onCompleted:
+    {
+        if (target)
+        {
+            target.verticalOvershootChanged.connect(private_props.onVerticalOvershootChanged)
+        }
+    }
+
+    onTargetChanged:
+    {
+        if (target)
+        {
+            target.verticalOvershootChanged.connect(private_props.onVerticalOvershootChanged)
         }
     }
 
